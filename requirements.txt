@@ -1,0 +1,11 @@
+datasets
+transformers
+argparse
+evaluate==0.3.0
+scikit-learn==1.3.0
+speechbrain==0.5.10
+librosa==0.10.1
+flask==2.3.3
+pyodbc==4.0.39
+huggingface-hub==0.16.4
+numpy==1.23.0
