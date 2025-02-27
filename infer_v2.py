@@ -4,6 +4,8 @@ from transformers import WhisperProcessor, WhisperForConditionalGeneration
 from datasets import Audio, load_dataset
 
 MAX_INPUT_LENGTH = 16000 * 30
+model_id = "openai/whisper-small"
+lang = "vietnamese"
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Inference of speech to text')
@@ -13,10 +15,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # processor = WhisperProcessor.from_pretrained("processor-pretrained")
-    processor = WhisperProcessor.from_pretrained("openai/whisper-small", language="vietnamese", task="transcribe")
+    processor = WhisperProcessor.from_pretrained(model_id, language=lang, task="transcribe")
 
     model = WhisperForConditionalGeneration.from_pretrained(args.model)
-    forced_decoder_ids = processor.get_decoder_prompt_ids(language="vietnamese", task="transcribe")
+    forced_decoder_ids = processor.get_decoder_prompt_ids(language=lang, task="transcribe")
 
     # load audio sample
     sample, sr = librosa.load(args.data, sr=16000)
