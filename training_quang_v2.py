@@ -46,13 +46,8 @@ lang = "vietnamese"
 feature_extractor = WhisperFeatureExtractor.from_pretrained(model_id)
 tokenizer = WhisperTokenizer.from_pretrained(model_id, language=lang, task="transcribe")
 processor = WhisperProcessor.from_pretrained(model_id, language=lang, task="transcribe")
-data_collator = DataCollatorSpeechSeq2SeqWithPadding(processor=processor)
 
 metric = evaluate.load("wer")
-model = WhisperForConditionalGeneration.from_pretrained(model_id)
-# model.save_pretrained('./pretrained')
-model.config.forced_decoder_ids = None
-model.config.suppress_tokens = []
 
 def prepare_dataset(batch):
     # load and resample audio data from 48 to 16kHz
@@ -97,6 +92,13 @@ def trainingApi(excel_dataset='./dataset/final_script.csv',
     print(common_voice["train"][0])
     common_voice = common_voice.cast_column("audio", Audio(sampling_rate=16000))
     common_voice = common_voice.map(prepare_dataset, remove_columns=common_voice.column_names["train"], num_proc=1)
+
+    data_collator = DataCollatorSpeechSeq2SeqWithPadding(processor=processor)
+    model = WhisperForConditionalGeneration.from_pretrained(model_id)
+    # model.save_pretrained('./pretrained')
+    model.config.forced_decoder_ids = None
+    model.config.suppress_tokens = []
+
 
     training_args = Seq2SeqTrainingArguments(
         output_dir=output_dir,  # change to a repo name of your choice
